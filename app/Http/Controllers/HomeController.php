@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Docente;
 
 class HomeController extends Controller
 {
@@ -24,5 +25,20 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    public function docentes(Request $request)
+    {
+        return view('docentes');
+    }
+
+    public function semestre(Request $request, Docente $docente)
+    {
+        return $docente;
+    }
+
+    public function planilha(Request $request)
+    {
+        return $request;
     }
 }

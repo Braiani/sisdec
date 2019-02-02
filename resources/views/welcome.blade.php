@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>SISDEC</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
@@ -13,6 +13,10 @@
         <style>
             html, body {
                 background-color: #fff;
+                /* background-image: url('https://source.unsplash.com/random'); */
+                background-image: url('http://10anos.ifms.edu.br/capa_site/site-capa-atalho-2019.png');
+                background-repeat: no-repeat;
+                background-size: cover;
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
@@ -38,9 +42,13 @@
                 position: absolute;
                 right: 10px;
                 top: 18px;
+                background-color: #fff;
+                border-radius: 25px;
             }
 
             .content {
+                background-color: #fff;
+                border-radius: 25px;
                 text-align: center;
             }
 
@@ -81,16 +89,11 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    SISDEC
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="http://brtechsistemas.com.br">BR tech Sistemas</a>
                 </div>
             </div>
         </div>

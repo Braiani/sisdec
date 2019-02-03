@@ -19,5 +19,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/docente', 'HomeController@docentes')->name('docentes');
+Route::post('/docente', 'HomeController@gerar')->name('gerar');
+Route::get('/declaracao', 'HomeController@declaracao')->name('declaracao');
 Route::post('/carregar/planilha', 'HomeController@planilha')->name('planilha');
-Route::get('/semestre/{docente}', 'HomeController@semestre')->name('semestre');

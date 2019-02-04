@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
-use App\Docente;
 
 class HomeController extends Controller
 {
@@ -29,11 +27,6 @@ class HomeController extends Controller
         return view('home');
     }
 
-    public function docentes(Request $request)
-    {
-        return view('docentes');
-    }
-
     public function gerar(Request $request)
     {
         return redirect()->route('declaracao');
@@ -42,12 +35,5 @@ class HomeController extends Controller
     public function planilha(Request $request)
     {
         return $request;
-    }
-
-    public function declaracao()
-    {
-        $pdf = PDF::loadView('declaracao.declaracao');
-        return $pdf->stream('declaracao.pdf');
-        //return view('declaracao.declaracao');
     }
 }

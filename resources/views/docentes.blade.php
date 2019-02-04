@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <form method="post" action="{{ route('gerar') }}" class="form">
+                <form method="get" action="{{ route('sisdec.declaracao') }}" class="form">
                     @csrf
 
                     <p class="">Agora selecione o(a) professor(a) para que o sistema

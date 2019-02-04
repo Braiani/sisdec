@@ -10528,9 +10528,11 @@ body {
 }
 
 .content {
+  padding: 10%;
   background-color: #fff;
-  border-radius: 25px;
+  border-radius: 30px;
   text-align: center;
+  box-shadow: 16px 16px 16px 16px rgba(0, 0, 0, 0.5), 32px 16px 32px 16px rgba(0, 0, 0, 0.8);
 }
 
 .title {

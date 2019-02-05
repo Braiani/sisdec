@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="container p-5">
+        @if ($errors->any())
+            <div class="col-sm-12">
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @endif
+    </div>
     <div class="container">
         <div class="col-sm-12 text-center">
             <div class="row">
@@ -35,7 +48,7 @@
                         <h3 class="modal-title" id="exampleModalLabel">Atualizar Disciplinas</h3>
                     </div>
                     <div class="modal-body">
-                        <form class="form" id="form-disciplinas" method="post" action="{{ route('sisdec.planilha') }}" enctype="multipart/form-data">
+                        <form class="form" id="form-disciplinas" method="post" action="{{ route('sisdec.disciplina.atualizar') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="col-sm-12">
                                 <div class="form-group">
@@ -61,12 +74,12 @@
                         <h5 class="modal-title" id="exampleModalLabel">Atualizar Docentes</h5>
                     </div>
                     <div class="modal-body">
-                        <form class="form" id="form-docentes" method="post" action="{{ route('sisdec.planilha') }}" enctype="multipart/form-data">
+                        <form class="form" id="form-docentes" method="post" action="{{ route('sisdec.docente.atualizar') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="arquivo">Selecione a planilha:</label>
-                                    <input type="file" class="form-control-file" name="arquivo" accept="text/csv">
+                                    <input type="file" class="form-control-file" name="arquivo" required accept="text/csv">
                                 </div>
                             </div>
                         </form>

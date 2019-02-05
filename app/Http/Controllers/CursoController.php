@@ -61,34 +61,46 @@ class CursoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Curso $curso
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Curso $curso)
     {
-        //
+        return view('cursos.edit')->with(['curso' => $curso]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Curso $curso
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Curso $curso)
     {
-        //
+        $validateData = $request->validate([
+            'nome' => 'required'
+        ]);
+
+        $curso->update($validateData);
+
+        toastr()->success('Curso atualizado com sucesso!');
+
+        return redirect()->route('sisdec.curso.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Curso $curso
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Curso $curso)
     {
-        //
+        $curso->delete();
+
+        toastr()->success('Curso apagado com sucesso!');
+
+        return redirect()->route('sisdec.curso.index');
     }
 }

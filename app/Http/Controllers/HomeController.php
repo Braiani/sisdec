@@ -31,9 +31,4 @@ class HomeController extends Controller
     {
         return redirect()->route('declaracao');
     }
-
-    public function planilha(Request $request)
-    {
-        return $request;
-    }
 }

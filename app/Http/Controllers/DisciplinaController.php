@@ -2,83 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use App\Curso;
+use App\Disciplina;
+use App\Docente;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use League\Csv\Reader;
 
 class DisciplinaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * DisciplinaController constructor.
      */
-    public function create()
+    public function __construct()
     {
-        //
+        $this->middleware('auth');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function atualizar(Request $request)
     {
-        //
+        $request->validate([
+            'arquivo' => 'required|file'
+        ]);
+
+        try{
+            $csv = Reader::createFromPath($request->arquivo);
+            $csv->setHeaderOffset(0);
+            foreach ($csv as $fileLine) {
+                $cursoFile = $this->formatCursoName($fileLine['curso']);
+
+                $curso = Curso::firstOrCreate(
+                    ['nome' => $cursoFile]
+                );
+
+                $disciplina = Disciplina::firstOrCreate(
+                    [
+                        'nome' => $fileLine['unidade_curricular'],
+                        'curso_id' => $curso->id
+                    ],
+                    [
+                        'ch' => (integer) $fileLine['ch']
+                    ]
+                );
+
+                $semestre = $this->getSemestreFile($fileLine['classe']);
+
+                $docentesFile = explode(',', $fileLine['professores']);
+
+                foreach ($docentesFile as $docenteFile) {
+                    $docente = Docente::where('nome', $docenteFile)->firstOrFail();
+
+//                    $docente->disciplinas()->attach($disciplina->id, ['semestre' => "2018.2"]);
+
+                    dump($docente->disciplinas->get('disciplina.nome'));
+                    dump($docente->disciplinas->where('pivot.semestre', '2018.2')->count() === 0);
+                }
+
+                dd($disciplina->nome);
+
+            }
+        }catch (ModelNotFoundException $exception){
+            toastr()->error($exception->getMessage());
+        }finally{
+//            return redirect()->route('home');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function getSemestreFile($origem)
     {
-        //
+        $response = Str::substr($origem, 0, 4) . '.' . Str::substr($origem, 4, 1);
+        return $response;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    private function formatCursoName($origem) : string
     {
-        //
-    }
+        $response = str_replace('Curso ', '', $origem);
+        $response = str_replace(' - Integrado', '', $response);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $response;
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Docente;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use League\Csv\Reader;
 
 class DocenteController extends Controller
 {
@@ -20,7 +23,8 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        return view('docentes');
+        $docentes = Docente::all();
+        return view('docentes')->with(['docentes' => $docentes]);
     }
 
     /**
@@ -91,8 +95,45 @@ class DocenteController extends Controller
 
     public function declaracao()
     {
-        $pdf = PDF::loadView('declaracao.declaracao');
-        return $pdf->stream('declaracao.pdf');
-        //return view('declaracao.declaracao');
+        /*$pdf = PDF::loadView('declaracao.declaracao');
+        return $pdf->stream('declaracao.pdf');*/
+        return view('declaracao.declaracao');
+    }
+
+    /**
+     * Update Docentes table from a given csv file.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function atualizar(Request $request)
+    {
+        $request->validate([
+            'arquivo' => 'required|file'
+        ]);
+
+        try{
+            $csv = Reader::createFromPath($request->arquivo);
+            $csv->setHeaderOffset(0);
+
+            foreach ($csv as $line) {
+                if ($line['siape'] != 'NULL'){
+                    Docente::updateOrCreate(
+                        ['siape' => $line['siape']],
+                        [
+                            'nome' => $line['nome'],
+                            'email' => $line['email'],
+                        ]
+                    );
+                }
+            }
+
+            toastr()->success('Lista de docentes atualizada!');
+        }catch (ModelNotFoundException $exception){
+            toastr()->error($exception->getMessage());
+        }finally{
+            return redirect()->route('home');
+        }
     }
 }

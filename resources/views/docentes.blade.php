@@ -15,10 +15,9 @@
                         <select name="docente" class="form-control select2" id="docente">
                             <option value=""></option>
                             <option value="-1">Todos</option>
-                            <option value="1">Prof. 1</option>
-                            <option value="2">Prof. 2</option>
-                            <option value="3">Prof. 3</option>
-                            <option value="4">Prof. 4</option>
+                            @foreach($docentes as $docente)
+                                <option value="{{ $docente->id }}">{{ $docente->nome }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">

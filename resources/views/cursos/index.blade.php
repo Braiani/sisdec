@@ -3,8 +3,12 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <a href="{{ route('sisdec.curso.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Adicionar
-                curso</a>
+            <a href="{{ route('sisdec.curso.create') }}" class="btn btn-primary m-1">
+                <i class="fa fa-plus"></i> Adicionar curso
+            </a>
+            <a href="{{ route('home') }}" class="btn btn-info m-1">
+                <i class="fa fa-home"></i> Retornar
+            </a>
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -30,21 +34,17 @@
                                 <td>{{ $curso->created_at->formatLocalized('%d/%m/%Y %H:%M') }}</td>
                                 <td>{{ $curso->updated_at->formatLocalized('%d/%m/%Y %H:%M') }}</td>
                                 <td>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <a href="{{ route('sisdec.curso.edit', $curso->id) }}" class="btn btn-warning">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <form method="POST" action="{{ route('sisdec.curso.destroy', $curso->id) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                                    <div class="col-sm-12">
+                                        <a href="{{ route('sisdec.curso.edit', $curso->id) }}" class="btn btn-warning m-1">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <form method="POST" action="{{ route('sisdec.curso.destroy', $curso->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger m-1">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

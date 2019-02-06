@@ -26,9 +26,4 @@ class HomeController extends Controller
     {
         return view('home');
     }
-
-    public function gerar(Request $request)
-    {
-        return redirect()->route('declaracao');
-    }
 }

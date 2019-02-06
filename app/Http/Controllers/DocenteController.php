@@ -23,7 +23,7 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        $docentes = Docente::all();
+        $docentes = Docente::has('disciplinas')->get();
         return view('docentes')->with(['docentes' => $docentes]);
     }
 
@@ -93,11 +93,17 @@ class DocenteController extends Controller
         //
     }
 
-    public function declaracao()
+    public function declaracao(Request $request)
     {
-        /*$pdf = PDF::loadView('declaracao.declaracao');
-        return $pdf->stream('declaracao.pdf');*/
-        return view('declaracao.declaracao');
+        $request->validate([
+            'docente' => 'required|integer'
+        ]);
+
+        $docentes = $request->docente == '-1' ? Docente::has('disciplinas')->get() : Docente::where('id', $request->docente)->get();
+
+        $pdf = PDF::loadView('declaracao.declaracao', ['docentes' => $docentes]);
+        return $pdf->stream('declaracao.pdf');
+        /*return view('declaracao.declaracao')->with(['docentes' => $docentes]);*/
     }
 
     /**

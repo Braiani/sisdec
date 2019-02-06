@@ -19,10 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => 'auth', 'as' => 'sisdec.'], function () {
-    Route::post('/docente', 'HomeController@gerar')->name('gerar');
     Route::post('docente/planilha', 'DocenteController@atualizar')->name('docente.atualizar');
+    Route::get('/declaracao', 'DocenteController@declaracao')->name('docente.declaracao');
     Route::resource('/docente', 'DocenteController');
-    Route::get('/declaracao', 'DocenteController@declaracao')->name('declaracao');
     Route::post('/disciplina/planilha', 'DisciplinaController@atualizar')->name('disciplina.atualizar');
     Route::resource('/disciplina', 'DisciplinaController');
     Route::resource('/curso', 'CursoController');

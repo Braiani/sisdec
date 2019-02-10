@@ -23,8 +23,9 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        $docentes = Docente::has('disciplinas')->get();
-        return view('docentes')->with(['docentes' => $docentes]);
+        $docentes = Docente::all();
+
+        return view('docentes.index')->with(['docentes' => $docentes]);
     }
 
     /**
@@ -34,7 +35,7 @@ class DocenteController extends Controller
      */
     public function create()
     {
-        //
+        return view('docentes.add');
     }
 
     /**
@@ -45,41 +46,50 @@ class DocenteController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validate = $request->validate([
+            'nome' => 'required',
+            'email' => 'required|email',
+            'siape' => 'required'
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        if (Docente::where('siape', $validate['siape'])->count() > 0){
+            return redirect()->back()->withInput()->withErrors('Já existe um docente cadastrado com esse SIAPE');
+        }
+
+        Docente::create($validate);
+        toastr()->success('Docente cadastrado com sucesso!');
+        return redirect()->route('sisdec.docente.index');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  Docente $docente
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Docente $docente)
     {
-        //
+        return view('docentes.edit')->with(['docente' => $docente]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  Docente $docente
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Docente $docente)
     {
-        //
+        $validate = $request->validate([
+            'nome' => 'required',
+            'email' => 'required|email',
+            'siape' => 'required'
+        ]);
+
+        $docente->update($validate);
+        toastr()->success('Docente cadastrado com sucesso!');
+        return redirect()->route('sisdec.docente.index');
     }
 
     /**
@@ -99,11 +109,24 @@ class DocenteController extends Controller
             'docente' => 'required|integer'
         ]);
 
-        $docentes = $request->docente == '-1' ? Docente::has('disciplinas')->get() : Docente::where('id', $request->docente)->get();
-
-        $pdf = PDF::loadView('declaracao.declaracao', ['docentes' => $docentes]);
-        return $pdf->stream('declaracao.pdf');
-        /*return view('declaracao.declaracao')->with(['docentes' => $docentes]);*/
+        if ($request->docente == '-1') {
+            $docentes = Docente::has('disciplinas')->get();
+            foreach ($docentes as $docente) {
+                set_time_limit(60);
+                $pdf = PDF::loadView('declaracao.declaracao', ['docente' => $docente]);
+                $filename = public_path() . '/teste/' . $docente->nome . '.pdf';
+                $pdf->save($filename);
+            }
+            toastr()->success('PDFs gerado com sucesso!');
+            return redirect()->route('sisdec.docente.index');
+        } else {
+            $docente = Docente::where('id', $request->docente)->first();
+            /*$teste = $docente->disciplinas->whereBetween('pivot.semestre', ['2015', '2018.2'])->min('pivot.semestre');
+            dd($teste);*/
+            $pdf = PDF::loadView('declaracao.declaracao', ['docente' => $docente]);
+            return $pdf->stream($docente->nome . '.pdf');
+            /*return view('declaracao.declaracao')->with(['docente' => $docente]);*/
+        }
     }
 
     /**

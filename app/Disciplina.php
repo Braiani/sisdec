@@ -12,4 +12,9 @@ class Disciplina extends Model
     {
         return $this->belongsTo(Curso::class);
     }
+
+    public function getNomeFormatadoAttribute()
+    {
+        return ucfirst(mb_strtolower(str_replace('*', '', $this->nome), 'UTF-8'));
+    }
 }

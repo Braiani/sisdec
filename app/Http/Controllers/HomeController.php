@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Docente;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,5 +26,11 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    public function gerar()
+    {
+        $docentes = Docente::has('disciplinas')->get();
+        return view('gerar')->with(['docentes' => $docentes]);
     }
 }

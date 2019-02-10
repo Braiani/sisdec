@@ -7,7 +7,6 @@ use App\Disciplina;
 use App\Docente;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use League\Csv\Reader;
 
 class DisciplinaController extends Controller
@@ -27,10 +26,12 @@ class DisciplinaController extends Controller
             'arquivo' => 'required|file'
         ]);
 
+        $namesError = [];
+
         $csv = Reader::createFromPath($request->arquivo);
         $csv->setHeaderOffset(0);
         foreach ($csv as $fileLine) {
-            $cursoFile = $this->formatCursoName($fileLine['curso']);
+            $cursoFile = $fileLine['curso'];
 
             $curso = Curso::firstOrCreate(
                 ['nome' => $cursoFile]
@@ -46,13 +47,14 @@ class DisciplinaController extends Controller
                 ]
             );
 
-            $semestre = $this->getSemestreFromFile($fileLine['classe']);
+            $semestre = $this->getSemestreFromFile($fileLine['periodo']);
 
             $docentesFile = explode(',', $fileLine['professores']);
 
             foreach ($docentesFile as $docenteFile) {
                 try {
-                    $docente = Docente::where('nome', $docenteFile)->firstOrFail();
+                    $docenteFile = trim($docenteFile);
+                    $docente = Docente::where('nome', 'LIKE', "{$docenteFile}%")->firstOrFail();
 
                     $docenteDisciplinas = $docente->disciplinas->where('pivot.semestre', $semestre)->where('id', $disciplina->id);
 
@@ -60,7 +62,10 @@ class DisciplinaController extends Controller
                         $docente->disciplinas()->attach($disciplina->id, ['semestre' => $semestre]);
                     }
                 } catch (ModelNotFoundException $e) {
-                    toastr()->error('Docente ' . $docenteFile . ' não cadastrado');
+                    if (!in_array($docenteFile, $namesError)) {
+                        array_push($namesError, $docenteFile);
+                        toastr()->error('Docente ' . $docenteFile . ' não cadastrado');
+                    }
                 }
             }
 
@@ -71,15 +76,7 @@ class DisciplinaController extends Controller
 
     public function getSemestreFromFile($origem)
     {
-        $response = Str::substr($origem, 0, 4) . '.' . Str::substr($origem, 4, 1);
-        return $response;
-    }
-
-    private function formatCursoName($origem): string
-    {
-        $response = str_replace('Curso ', '', $origem);
-        $response = str_replace(' - Integrado', '', $response);
-
+        $response = str_replace('/', '.', $origem);
         return $response;
     }
 }

@@ -33,7 +33,7 @@
                     </a>
                 </div>
                 <div class="col-sm-3 p-1">
-                    <a class="btn btn-info btn-block" href="{{ route('sisdec.docente.index') }}">
+                    <a class="btn btn-info btn-block" href="{{ route('sisdec.gerar.index') }}">
                         Continuar <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
@@ -85,6 +85,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
+                        <a href="{{ route('sisdec.docente.index') }}" class="btn btn-success">Gerenciar docentes</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                         <button type="submit" form="form-docentes" class="btn btn-primary">Salvar</button>
                     </div>

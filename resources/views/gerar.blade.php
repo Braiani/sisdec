@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <form method="GET" action="{{ route('sisdec.docente.declaracao') }}" class="form">
+                <form method="GET" target="_blank" action="{{ route('sisdec.docente.declaracao') }}" class="form">
                     {{--@csrf--}}
                     <p class="">Agora selecione o(a) professor(a) para que o sistema
                         informe os semestres. Logo após, clique em "enviar".
